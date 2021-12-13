@@ -17,22 +17,25 @@ class SqlQueries:
             ON events.song = songs.title
                 AND events.artist = songs.artist_name
                 AND events.length = songs.duration
+            WHERE md5(events.sessionid || events.start_time) is not null
     """)
 
     user_table_insert = ("""
         SELECT distinct userid, firstname, lastname, gender, level
         FROM staging_events
-        WHERE page='NextSong'
+        WHERE page='NextSong' and userid is not null
     """)
 
     song_table_insert = ("""
         SELECT distinct song_id, title, artist_id, year, duration
         FROM staging_songs
+        where song_id is not null
     """)
 
     artist_table_insert = ("""
         SELECT distinct artist_id, artist_name, artist_location, artist_latitude, artist_longitude
         FROM staging_songs
+        where artist_id is not null
     """)
 
     time_table_insert = ("""
